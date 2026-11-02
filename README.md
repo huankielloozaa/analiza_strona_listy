@@ -1,0 +1,1 @@
+# analiza_strona_listy
