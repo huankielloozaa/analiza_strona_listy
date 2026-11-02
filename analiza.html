@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Analiza matematyczna – rozwiązania krok po kroku</title>
+<style>
+:root{--bg:#f3f6fb;--grid:#dbe4f2;--ink:#14214d;--mut:#55608a;--card:#fff;--line:#c9d4ea;--hl:#fff1a8;--ok:#1f8a5b;--ac:#2b4bd6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1530;--grid:#1a2349;--ink:#e6ebff;--mut:#9aa6d6;--card:#172048;--line:#2b376b;--hl:#4a4311;--ok:#4cd09a;--ac:#8fa6ff}}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+header{padding:28px 18px 8px;max-width:860px;margin:auto}
+h1{font:700 clamp(26px,5vw,40px)/1.15 Georgia,"Times New Roman",serif;margin:0 0 6px}
+header p{margin:0;color:var(--mut);max-width:60ch}
+nav{max-width:860px;margin:14px auto 0;padding:0 18px;display:flex;flex-wrap:wrap;gap:8px}
+nav button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:8px;cursor:pointer}
+nav button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav button:focus-visible,.hd:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+main{max-width:860px;margin:auto;padding:14px 18px 60px}
+h2{font:700 24px Georgia,serif;margin:18px 0 2px}
+.sub{color:var(--mut);margin:0 0 14px}
+.bar{height:6px;background:var(--line);border-radius:3px;margin:0 0 16px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:10px;margin:0 0 10px;overflow:hidden}
+.card.done{border-color:var(--ok)}
+.hd{all:unset;box-sizing:border-box;display:flex;gap:12px;width:100%;padding:12px 14px;cursor:pointer;align-items:baseline}
+.id{font:700 15px Georgia,serif;color:var(--ac);min-width:44px}
+.q{flex:1}
+.body{padding:2px 16px 16px 16px;border-top:1px dashed var(--line)}
+.body ol{padding-left:22px;margin:12px 0}.body li{margin:6px 0}
+.ans{background:var(--hl);padding:10px 14px;border-radius:6px;margin:10px 0;font-weight:600}
+canvas{width:100%;max-width:640px;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--card);display:block;margin:10px 0}
+.tick{font:inherit;font-size:14px;border:1.5px solid var(--ok);color:var(--ok);background:transparent;border-radius:6px;padding:4px 10px;cursor:pointer}
+.card.done .tick{background:var(--ok);color:var(--card)}
+.warn{color:var(--mut);font-size:14px;border-left:3px solid var(--line);padding-left:10px;margin:8px 0}
+input[type=text]{font:inherit;width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+input[type=range]{width:100%;max-width:640px}
+.tip{font-size:14px;color:var(--mut)}
+</style></head><body>
+<header><h1>Analiza matematyczna, semestr I</h1>
+<p>Rozwiązania krok po kroku do list 0–8. Kliknij zadanie, żeby je otworzyć. Zrobione odhaczaj, pasek postępu liczy się sam.</p></header>
+<nav id="nav" aria-label="Listy zadań"></nav>
+<main id="main"></main>
+<script>
+// Format: [id, treść, [kroki], odpowiedź, wykres?]
+var L=[
+{n:'Lista 0',t:'Własności funkcji',d:'Dziedziny, funkcje cyklometryczne, złożenia.',k:[
+['0.1a','Dziedzina: y = x / √(x²−3x+2)',['Pierwiastek jest w mianowniku, więc wyrażenie pod nim musi być <b>ściśle większe od 0</b> (zero też odpada, bo dzielimy).','x²−3x+2 = (x−1)(x−2) > 0.','Parabola z ramionami w górę jest dodatnia poza miejscami zerowymi: x &lt; 1 lub x &gt; 2.'],'D = (−∞,1) ∪ (2,∞)',{f:'x*x-3*x+2',r:[-1,4],t:'x²−3x+2 jest dodatnie poza przedziałem [1,2]'}],
+['0.1b','Dziedzina: y = √(x²−3x+2) + 1/√(3+2x−x²)',['Pierwszy pierwiastek: x²−3x+2 ≥ 0 → x ≤ 1 lub x ≥ 2 (tu zero wolno).','Drugi składnik jest w mianowniku: 3+2x−x² &gt; 0 → x²−2x−3 &lt; 0 → (x−3)(x+1) &lt; 0 → −1 &lt; x &lt; 3.','Bierzemy część wspólną obu warunków.'],'D = (−1,1] ∪ [2,3)'],
+['0.1d','Dziedzina: y = 1/log(1−x) + √(x+2)',['log(1−x) istnieje, gdy 1−x &gt; 0, czyli x &lt; 1.','Logarytm jest w mianowniku, więc ≠ 0: log(1−x) = 0 ⇔ 1−x = 1 ⇔ x = 0. Wyrzucamy x = 0.','√(x+2) wymaga x ≥ −2.'],'D = [−2,0) ∪ (0,1)'],
+['0.1c','Dziedzina: y = √x + ∛(1/(x−2)) − log(2x−3)',['Zakładam, że to pierwiastek trzeciego stopnia z 1/(x−2).','√x wymaga x ≥ 0.','Pierwiastek <b>nieparzystego</b> stopnia istnieje dla każdej liczby, ale ułamek 1/(x−2) wymaga x ≠ 2.','log(2x−3) wymaga 2x−3 &gt; 0, czyli x &gt; 3/2.','Część wspólna: x &gt; 3/2 i x ≠ 2 (warunek x ≥ 0 jest wtedy spełniony).'],'D = (3/2, 2) ∪ (2, ∞)'],
+['0.1e','Dziedzina: y = √(log((5x−x²)/4))',['Pierwiastek wymaga: log(…) ≥ 0, czyli (5x−x²)/4 ≥ 1 (bo log 1 = 0, a log rośnie).','Sam logarytm wymaga (5x−x²)/4 &gt; 0, ale to wynika już z poprzedniego warunku.','5x − x² ≥ 4 ⇒ x² − 5x + 4 ≤ 0 ⇒ (x−1)(x−4) ≤ 0 ⇒ x ∈ [1,4].'],'D = [1, 4]'],
+['0.1f','Dziedzina: y = log(√(x−4) + √(6−x))',['√(x−4) wymaga x ≥ 4, √(6−x) wymaga x ≤ 6.','Logarytm wymaga, by suma pierwiastków była &gt; 0. Oba naraz są zerem tylko gdy x=4 i x=6 jednocześnie, czyli nigdy, więc suma jest zawsze dodatnia.'],'D = [4, 6]'],
+['0.2','Oblicz wartości funkcji cyklometrycznych',['Pamiętaj zakresy wartości: arcsin ∈ [−π/2, π/2], arccos ∈ [0, π], arcctg ∈ (0, π). To najczęstsza pułapka.','a) arcsin(−√3/2) = −π/3, b) arcsin 1 = π/2, c) arcctg √3 = π/6, d) arcctg(√3/3) = π/3.','e) arccos(−1/2) = 2π/3.','f) tg(arcsin ½) = tg(π/6) = √3/3. g) sin(arccos 0) = sin(π/2) = 1.','h) ctg(arccos √2/2) = ctg(π/4) = 1. i) tg(arcctg √3/3) = tg(π/3) = √3.'],'a) −π/3, b) π/2, c) π/6, d) π/3, e) 2π/3, f) √3/3, g) 1, h) 1, i) √3'],
+['0.3','f(x)=x³−x, φ(x)=sin 2x. Znajdź f(φ(π/12)), φ(f(1)), f(φ(x)), f(f(x))',['Złożenie czytamy od środka: f(φ(a)) = najpierw φ, potem f.','a) φ(π/12) = sin(π/6) = ½, f(½) = 1/8 − 1/2 = −3/8.','b) f(1) = 1−1 = 0, φ(0) = sin 0 = 0.','d) wstawiamy φ(x) w miejsce x: f(φ(x)) = sin³2x − sin 2x.','e) f(f(x)) = (x³−x)³ − (x³−x).'],'a) −3/8, b) 0, d) sin³2x − sin2x, e) (x³−x)³ − (x³−x)'],
+['0.4a','Złożenia dla f(x)=2x, g(x)=cos x',['f∘g znaczy f(g(x)): wstawiamy g do f.','f∘f = 2·(2x) = 4x.','f∘g = 2·cos x.','g∘f = cos(2x) (to NIE to samo co 2cos x!).','g∘g = cos(cos x).'],'f∘f = 4x, f∘g = 2cos x, g∘f = cos 2x, g∘g = cos(cos x)'],
+['0.4c','Złożenia dla f(x)=x², g(x)=√x',['f∘f = (x²)² = x⁴.','f∘g = (√x)² = x, ale tylko dla x ≥ 0 (dziedzina √x).','g∘f = √(x²) = |x| (pułapka: to nie jest x, bo dla x=−3 dostajemy 3).','g∘g = √(√x) = ⁴√x, x ≥ 0.'],'f∘f = x⁴, f∘g = x (x≥0), g∘f = |x|, g∘g = ⁴√x']
+]},
+{n:'Lista I',t:'Ciągi liczbowe',d:'Granice ciągów, twierdzenie o trzech ciągach, liczba e.',k:[
+['1.5','Granice ciągów wymiernych',['Reguła: dzielimy licznik i mianownik przez <b>najwyższą potęgę n</b>. Wszystko z n w mianowniku znika.','a) (4n−3)/(6−5n) → dzielimy przez n: (4−3/n)/(6/n−5) → 4/(−5) = −4/5.','b) (n²−1)/(3−n³): mianownik rośnie szybciej (n³ &gt; n²), więc → 0.','c) (n−1)(n+3)/(3n²+5) = (n²+2n−3)/(3n²+5) → 1/3 (liczą się tylko wyrazy z n²).','d) ((3n−2)/(2n−1))³ → (3/2)³ = 27/8.','e) √((5n−2)/(2n+1)) → √(5/2). f) (2n+(−1)ⁿ)/n = 2 + (−1)ⁿ/n → 2.'],'a) −4/5, b) 0, c) 1/3, d) 27/8, e) √(5/2), f) 2'],
+['1.6','Granice z pierwiastkami (różnica)',['Trik: różnicę pierwiastków mnożymy i dzielimy przez <b>sumę</b> (wzór a²−b² = (a−b)(a+b)).','a) √(n+2) − √n = 2/(√(n+2)+√n) → 0 (mianownik rośnie do ∞).','b) √(n²+n) − n = n/(√(n²+n)+n). Dzielimy przez n: 1/(√(1+1/n)+1) → 1/2.','c) n − √(n²+5n) = −5n/(n+√(n²+5n)) → −5/(1+1) = −5/2.'],'a) 0, b) 1/2, c) −5/2'],
+['1.7','Granice z potęgami (ciągi wykładnicze)',['Reguła: dzielimy przez <b>najszybciej rosnącą</b> potęgę, np. 4ⁿ lub 9ⁿ. Wyrazy typu (1/2)ⁿ → 0.','a) (4ⁿ⁻¹ − 5)/(2²ⁿ − 7). Mamy 4ⁿ⁻¹ = 4ⁿ/4 oraz 2²ⁿ = 4ⁿ. Dzielimy przez 4ⁿ: (1/4 − 5/4ⁿ)/(1 − 7/4ⁿ) → (1/4)/1 = 1/4.','b) 5·3²ⁿ⁻¹/(4·9ⁿ+7). 3²ⁿ⁻¹ = 9ⁿ/3, więc licznik = (5/3)·9ⁿ. Dzielimy przez 9ⁿ: (5/3)/(4 + 7/9ⁿ) → (5/3)/4 = 5/12.'],'a) 1/4, b) 5/12'],
+['1.8b','lim (1+3+…+(2n−1)) / (2+4+…+2n)',['Suma kolejnych nieparzystych: 1+3+…+(2n−1) = n².','Suma kolejnych parzystych: 2+4+…+2n = 2(1+…+n) = n(n+1).','Ułamek: n²/(n(n+1)) = n/(n+1) → 1.'],'1'],
+['1.9a','lim ⁿ√(10ⁿ + 9ⁿ + 8ⁿ) (tw. o trzech ciągach)',['Największy składnik to 10ⁿ. Szacujemy z dołu i z góry:','10 = ⁿ√(10ⁿ) ≤ ⁿ√(10ⁿ+9ⁿ+8ⁿ) ≤ ⁿ√(3·10ⁿ) = 10·ⁿ√3.','ⁿ√3 → 1, więc oba brzegi dążą do 10. Środek też.'],'10'],
+['1.10','Granice z liczbą e: (1+1/n)ⁿ → e',['Cel: doprowadzić do postaci (1 + 1/k)^k, gdzie k → ∞.','a) (1+1/n)^(2n) = ((1+1/n)ⁿ)² → e².','d) ((n+2)/(n−3))^(2n) = (1 + 5/(n−3))^(2n). Niech k = (n−3)/5, wtedy wykładnik 2n ≈ 10k → e¹⁰.','n) n·(ln(n+1) − ln n) = n·ln(1+1/n) = ln((1+1/n)ⁿ) → ln e = 1.'],'a) e², d) e¹⁰, n) 1']
+]},
+{n:'Lista II',t:'Granice funkcji',d:'Skracanie, sinus, liczba e, twierdzenie o trzech funkcjach.',k:[
+['2.1','Granice w nieskończoności (wielomiany i ułamki)',['Rządzi najwyższa potęga. Wielomian dąży do tego, co robi jego najwyższy wyraz.','a) 3x³ − 7x² − 8 → +∞ (3x³ wygrywa).','b) −x⁶ + 2x − 1 → −∞ (znak przy x⁶ jest minus).','c) (9x−19)/(5x²+15): mianownik ma wyższy stopień, więc → 0.','d) (3x²+8x−7)/(x²+5): ten sam stopień, więc granica to iloraz współczynników 3/1 = 3.'],'a) +∞, b) −∞, c) 0, d) 3'],
+['2.2a','lim x→4 (8−2x)/(16−x²)',['Podstawienie daje 0/0, więc rozkładamy.','8 − 2x = 2(4 − x). 16 − x² = (4−x)(4+x).','Skracamy (4−x): 2/(4+x). Podstawiamy x=4: 2/8.'],'1/4'],
+['2.2b','lim x→2 (x²−4x+4)/(2x²−8)',['x²−4x+4 = (x−2)². 2x²−8 = 2(x−2)(x+2).','Skracamy (x−2): (x−2)/(2(x+2)).','Dla x=2 licznik 0, mianownik 8.'],'0'],
+['2.2','Granice typu 0/0: rozkład na czynniki',['Podstawiasz i wychodzi 0/0? Rozłóż licznik i mianownik, skróć wspólny czynnik, podstaw jeszcze raz.','c) (x²−3x+2)/(x²−1) = (x−1)(x−2) / ((x−1)(x+1)) = (x−2)/(x+1) → −1/2 przy x→1.','d) (x²−5x+6)/(x²−8x+15) = (x−2)(x−3)/((x−3)(x−5)) = (x−2)/(x−5) → 1/(−2) = −1/2 przy x→3.'],'c) −1/2, d) −1/2'],
+['2.5','Granice z sinusem: sin(t)/t → 1',['Podstawowa granica: sin t / t → 1, gdy t → 0. Tak samo tg t / t → 1.','a) x·sin(1/x), x→∞: niech t = 1/x → 0, więc sin t / t → 1.','g) tg5x / tg2x = (tg5x/5x) · (2x/tg2x) · (5x/2x) → 1·1·5/2 = 5/2.'],'a) 1, g) 5/2'],
+['2.6','Granice typu 1^∞ (liczba e)',['Wzór: (1 + a/x)^x → eᵃ, gdy x → ∞.','a) ((x+1)/(x−1))^x = (1 + 2/(x−1))^x. Wykładnik x ≈ x−1, więc granica to e².','e) (1+2x)^(1/(3x)), x→0: niech t = 2x, wtedy (1+t)^(2/(3t)) = ((1+t)^(1/t))^(2/3) → e^(2/3).'],'a) e², e) e^(2/3)'],
+['2.7a','lim x·sin(1/x) przy x→0 (tw. o trzech funkcjach)',['Sinus jest ograniczony: −1 ≤ sin(1/x) ≤ 1.','Mnożymy przez |x|: −|x| ≤ x·sin(1/x) ≤ |x|.','Oba brzegi dążą do 0, więc środek też. Uwaga: nie można tu użyć sin t/t → 1, bo 1/x → ∞, a nie 0!'],'0',{f:'x*sin(1/x)',r:[-0.5,0.5],t:'Wykres wciśnięty między y = |x| i y = −|x|'}]
+]},
+{n:'Lista III',t:'Pochodne',d:'Wzory, iloczyn, iloraz, funkcja złożona, n-ta pochodna.',k:[
+['3.1a','f(x) = 4x^(7/4) − 2x^(−5/2) + 6x^(1/2) − 10',['Wzór: (xᵃ)′ = a·xᵃ⁻¹. Stałe −10 znika.','4x^(7/4) → 4·(7/4)·x^(3/4) = 7x^(3/4).','−2x^(−5/2) → −2·(−5/2)·x^(−7/2) = 5x^(−7/2).','6x^(1/2) → 6·(1/2)·x^(−1/2) = 3x^(−1/2).'],'f′ = 7x^(3/4) + 5x^(−7/2) + 3x^(−1/2)'],
+['3.1b','f(x) = 3 ln x + 2 tg x',['(ln x)′ = 1/x, (tg x)′ = 1/cos²x.'],'f′ = 3/x + 2/cos²x'],
+['3.1e','f(x) = ½ eˣ · arcsin x',['Iloczyn, stała ½ zostaje przed.','(arcsin x)′ = 1/√(1−x²).','f′ = ½(eˣ arcsin x + eˣ/√(1−x²)).'],'f′ = ½ eˣ (arcsin x + 1/√(1−x²))'],
+['3.1f','f(x) = (8x³ + 2x² − 8)/(x⁷ + 6x⁵ + 9)',['Iloraz: (u/v)′ = (u′v − uv′)/v².','u = 8x³+2x²−8 → u′ = 24x²+4x.','v = x⁷+6x⁵+9 → v′ = 7x⁶+30x⁴.','Składamy wzór. Rozwijanie nic tu nie upraszcza, więc zostawiamy w tej postaci.'],'f′ = [(24x²+4x)(x⁷+6x⁵+9) − (8x³+2x²−8)(7x⁶+30x⁴)] / (x⁷+6x⁵+9)²'],
+['3.1g','f(x) = (eˣ + 2)/(x³ − x)',['Iloraz: u = eˣ+2, u′ = eˣ; v = x³−x, v′ = 3x²−1.','f′ = (eˣ(x³−x) − (eˣ+2)(3x²−1)) / (x³−x)².'],'f′ = [eˣ(x³−x) − (eˣ+2)(3x²−1)] / (x³−x)²'],
+['3.1h','f(x) = x cos x / (1 + 7 ctg x)',['Iloraz, a licznik to iloczyn.','u = x cos x → u′ = cos x − x sin x.','v = 1 + 7 ctg x → v′ = −7/sin²x (pochodna ctg x to −1/sin²x).','u′v − uv′ = (cos x − x sin x)(1+7ctg x) + 7x cos x / sin²x (dwa minusy dają plus).'],'f′ = [(cos x − x sin x)(1+7 ctg x) + 7x cos x / sin²x] / (1+7 ctg x)²'],
+['3.1i','f(x) = 5x⁴ + 2x³ − x² + 3x − 5',['Każdy wyraz osobno: 5·4x³, 2·3x², −2x, 3, stała znika.'],'f′ = 20x³ + 6x² − 2x + 3'],
+['3.1j','f(x) = 2·∛(x²) − ⁵√x (zakładam taki zapis, PDF jest zniekształcony)',['Najpierw pierwiastki jako potęgi: f = 2x^(2/3) − x^(1/5).','2x^(2/3) → 2·(2/3)·x^(−1/3) = (4/3)x^(−1/3).','x^(1/5) → (1/5)x^(−4/5).'],'f′ = (4/3)x^(−1/3) − (1/5)x^(−4/5)'],
+['3.1k','f(x) = (x²−2x+1)(x−1)',['Zanim zaczniesz różniczkować, uprość: x²−2x+1 = (x−1)².','f = (x−1)³, funkcja złożona: 3(x−1)²·1.'],'f′ = 3(x−1)²'],
+['3.1l','f(x) = sin x · ln x',['Iloczyn: cos x · ln x + sin x · (1/x).'],'f′ = cos x ln x + sin x / x'],
+['3.1n','f(x) = ln x / (sin x + x)',['u = ln x, u′ = 1/x; v = sin x + x, v′ = cos x + 1.','f′ = ((1/x)(sin x + x) − ln x (cos x + 1)) / (sin x + x)².'],'f′ = [(sin x + x)/x − ln x (cos x + 1)] / (sin x + x)²'],
+['3.1c','f(x) = x⁷ · sin x',['Pochodna iloczynu: (u·v)′ = u′v + uv′.','u = x⁷ → u′ = 7x⁶; v = sin x → v′ = cos x.'],'f′(x) = 7x⁶ sin x + x⁷ cos x'],
+['3.1d','f(x) = 3ˣ · x⁵',['Iloczyn. (3ˣ)′ = 3ˣ ln 3 (a nie x·3^(x−1)!), (x⁵)′ = 5x⁴.','f′ = 3ˣ ln3 · x⁵ + 3ˣ · 5x⁴ = 3ˣ x⁴ (x ln3 + 5).'],'f′(x) = 3ˣ x⁴ (x ln 3 + 5)'],
+['3.1m','f(x) = (x²+2)/(x−1)',['Iloraz: (u/v)′ = (u′v − uv′)/v².','u = x²+2, u′ = 2x; v = x−1, v′ = 1.','Licznik: 2x(x−1) − (x²+2) = 2x² − 2x − x² − 2 = x² − 2x − 2.'],'f′(x) = (x² − 2x − 2)/(x−1)²'],
+['3.1o','f(x) = (3x+1)⁷',['Funkcja złożona: pochodna zewnętrznej × pochodna wewnętrznej.','Zewnętrzna: u⁷ → 7u⁶. Wewnętrzna: 3x+1 → 3.'],'f′(x) = 21 (3x+1)⁶'],
+['3.1p','f(x) = e^(cos²x)',['Trzy warstwy: e^(…), potem (…)², potem cos x. Rozpakowujemy po kolei.','(e^w)′ = e^w · w′, gdzie w = cos²x.','w′ = 2cos x · (−sin x) = −sin 2x.'],'f′(x) = −sin 2x · e^(cos²x)'],
+['3.1r','f(x) = −cos x / sin²x + ln tg(x/2)',['Policzymy dwa składniki osobno.','Składnik 1 (iloraz): u = −cos x, u′ = sin x; v = sin²x, v′ = 2 sin x cos x. (u′v − uv′)/v² = (sin³x + 2 sin x cos²x)/sin⁴x = (sin²x + 2cos²x)/sin³x = (1 + cos²x)/sin³x.','Składnik 2 (złożenie): (ln w)′ = w′/w dla w = tg(x/2). w′ = 1/(2cos²(x/2)). Zatem pochodna = 1/(2 sin(x/2) cos(x/2)) = 1/sin x (bo sin x = 2 sin(x/2)cos(x/2)).','Suma: (1 + cos²x)/sin³x + 1/sin x = (1 + cos²x + sin²x)/sin³x = 2/sin³x (bo sin²x = sin³x/sin x).'],'f′ = 2/sin³x'],
+['3.1s','f(x) = (cos x)^x',['Zmienna i w podstawie, i w wykładniku → przepisujemy: f = e^(x·ln cos x).','Pochodna wykładnika: (x ln cos x)′ = ln cos x + x · (−sin x / cos x) = ln cos x − x tg x.'],'f′(x) = (cos x)ˣ (ln cos x − x tg x)'],
+['3.3a','n-ta pochodna f(x) = x·eˣ',['Liczymy kilka pierwszych i szukamy wzoru.','f′ = eˣ + xeˣ = (x+1)eˣ; f″ = (x+2)eˣ; f‴ = (x+3)eˣ.','Każda pochodna dodaje 1 do współczynnika przy eˣ.'],'f⁽ⁿ⁾(x) = (x + n) eˣ'],
+['3.2a','Dla jakich k: f‴(2) ≥ 0, gdy f(x) = 5kx⁵ + (k−1)x⁴ + 2',['Liczymy trzy pochodne po kolei.','f′ = 25k x⁴ + 4(k−1)x³.','f″ = 100k x³ + 12(k−1)x².','f‴ = 300k x² + 24(k−1)x.','f‴(2) = 300k·4 + 24(k−1)·2 = 1200k + 48k − 48 = 1248k − 48.','1248k − 48 ≥ 0 ⇒ k ≥ 48/1248 = 1/26.'],'k ≥ 1/26'],
+['3.2b','Dla jakich k: f‴(2) ≥ 0, gdy f(x) = e^(4kx)/k (zakładam taki zapis, k≠0)',['Pochodna e^(4kx) to 4k·e^(4kx), czyli każda kolejna pochodna dokłada czynnik 4k.','f‴ = (4k)³ e^(4kx) / k = 64k³ e^(4kx)/k = 64k² e^(4kx).','Dla k ≠ 0 mamy k² &gt; 0 i e^(…) &gt; 0, więc f‴(2) &gt; 0 zawsze.'],'Każde k ≠ 0'],
+['3.2c','Dla jakich k: f‴(2) ≥ 0, gdy f(x) = (x²+k)/x',['Najpierw upraszczamy: f = x + k/x = x + k·x⁻¹ (x ≠ 0).','f′ = 1 − k x⁻² = 1 − k/x².','f″ = 2k x⁻³ = 2k/x³.','f‴ = −6k x⁻⁴ = −6k/x⁴.','f‴(2) = −6k/16 = −3k/8 ≥ 0. Mnożymy przez −8/3 i zmieniamy znak nierówności: k ≤ 0.'],'k ≤ 0'],
+['3.3b','n-ta pochodna f(x) = x ln x',['f′ = ln x + x·(1/x) = ln x + 1.','f″ = 1/x = x⁻¹. f‴ = −x⁻². f⁽⁴⁾ = 2x⁻³. f⁽⁵⁾ = −6x⁻⁴.','Współczynniki: 1, −1, 2, −6, to (−1)ⁿ · (n−2)!. Wykładnik przy x to −(n−1).','Sprawdzenie dla n=4: (+1)·2!/x³ = 2/x³ ✓.'],'f′ = ln x + 1, a dla n ≥ 2: f⁽ⁿ⁾(x) = (−1)ⁿ (n−2)! / xⁿ⁻¹'],
+['3.4a','Sprawdź: f = cos 2x spełnia (f⁽⁵⁾ − f⁽⁴⁾)/4 = f″ − f‴',['Pochodna cos(2x) to −2 sin 2x, a sin(2x) to 2cos 2x. Tak powstaje cykl:','f′ = −2 sin 2x, f″ = −4 cos 2x, f‴ = 8 sin 2x, f⁽⁴⁾ = 16 cos 2x, f⁽⁵⁾ = −32 sin 2x.','Lewa strona: (−32 sin 2x − 16 cos 2x)/4 = −8 sin 2x − 4 cos 2x.','Prawa strona: −4 cos 2x − 8 sin 2x.','Obie strony są równe.'],'Tak, równanie jest spełnione'],
+['3.4b','Sprawdź równanie dla f = 1/x²',['f = x⁻². f′ = −2x⁻³, f″ = 6x⁻⁴, f‴ = −24x⁻⁵.','Wersja dosłowna z PDF: x⁵f‴ − 2x⁷f′ = x⁵(−24x⁻⁵) − 2x⁷(−2x⁻³) = −24 + 4x⁴. To NIE jest 6x − 2x⁵, więc tak zapisane równanie nie zachodzi.','Najpewniej w PDF zgubił się zapis i chodzi o x⁵f″ − 2x⁷f: x⁵·6x⁻⁴ − 2x⁷·x⁻² = 6x − 2x⁵ ✓ (to dokładnie prawa strona).','Sprawdź w oryginalnej liście, który zapis jest właściwy.'],'Dosłownie: nie. Z f″ i f zamiast f‴ i f′: tak']
+]},
+{n:'Lista IV',t:'Ekstrema i wypukłość',d:'Monotoniczność, ekstrema, punkty przegięcia.',k:[
+['4.1a','f(x) = x³ − 3x + 5',['Schemat: 1) f′, 2) miejsca zerowe f′, 3) znak f′ w przedziałach, 4) wnioski.','f′ = 3x² − 3 = 3(x−1)(x+1) = 0 ⇒ x = −1, x = 1.','f′ &gt; 0 dla x &lt; −1 i x &gt; 1 (rośnie); f′ &lt; 0 dla −1 &lt; x &lt; 1 (maleje).','W x=−1 znak zmienia się + → −: maksimum, f(−1) = 7. W x=1: − → +: minimum, f(1) = 3.'],'Rośnie: (−∞,−1) i (1,∞); maleje: (−1,1). Max f(−1)=7, min f(1)=3',{f:'x**3-3*x+5',r:[-3,3],pts:[[-1,7],[1,3]],t:'Maksimum w (−1; 7), minimum w (1; 3)'}],
+['4.1b','f(x) = x³ + 3x² − 9x − 2',['f′ = 3x² + 6x − 9 = 3(x² + 2x − 3) = 3(x+3)(x−1).','Miejsca zerowe: x = −3, x = 1. Parabola f′ jest dodatnia na zewnątrz: rośnie (−∞,−3) i (1,∞), maleje (−3,1).','f(−3) = −27+27+27−2 = 25 (max). f(1) = 1+3−9−2 = −7 (min).'],'Max f(−3)=25, min f(1)=−7',{f:'x**3+3*x*x-9*x-2',r:[-5,3],pts:[[-3,25],[1,-7]],t:'Ekstrema w x = −3 i x = 1'}],
+['4.1c','f(x) = x³/(x+1)²',['Dziedzina: x ≠ −1.','Iloraz: f′ = (3x²(x+1)² − x³·2(x+1))/(x+1)⁴. Skracamy (x+1): (3x²(x+1) − 2x³)/(x+1)³ = x²(x+3)/(x+1)³.','Zera f′: x = 0 (podwójne, bo x²) i x = −3.','Znak: x² ≥ 0 nie wpływa, więc liczy się (x+3)/(x+1)³. Dla x&lt;−3: dodatni; −3&lt;x&lt;−1: ujemny; x&gt;−1: dodatni.','Czyli rośnie na (−∞,−3), maleje na (−3,−1), rośnie na (−1,∞). Maksimum w x=−3: f(−3) = −27/4.','W x=0 znak f′ się NIE zmienia, więc tam ekstremum nie ma.'],'Max f(−3) = −27/4; brak ekstremum w x=0',{f:'x**3/((x+1)**2)',r:[-6,4],pts:[[-3,-6.75]],t:'Asymptota pionowa w x = −1'}],
+['4.1d','f(x) = x³/(x−1)',['Dziedzina: x ≠ 1.','f′ = (3x²(x−1) − x³)/(x−1)² = (2x³ − 3x²)/(x−1)² = x²(2x−3)/(x−1)².','Zera: x=0 (podwójne, brak zmiany znaku) i x=3/2.','Mianownik i x² są nieujemne, więc znak daje 2x−3: ujemny dla x&lt;3/2, dodatni dla x&gt;3/2.','Maleje na (−∞,1) i (1,3/2), rośnie na (3/2,∞). Minimum: f(3/2) = (27/8)/(1/2) = 27/4.'],'Min f(3/2) = 27/4; w x=0 brak ekstremum',{f:'x**3/(x-1)',r:[-2,4],pts:[[1.5,6.75]],t:'Asymptota pionowa w x = 1'}],
+['4.1e','f(x) = x²·e^(−x)',['f′ = 2x·e^(−x) + x²·(−e^(−x)) = e^(−x)(2x − x²) = x(2−x)e^(−x).','e^(−x) &gt; 0, więc znak zależy od x(2−x): ujemny dla x&lt;0, dodatni dla 0&lt;x&lt;2, ujemny dla x&gt;2.','Czyli minimum w x=0, f(0)=0; maksimum w x=2, f(2)=4/e².'],'Min f(0)=0, max f(2)=4/e²',{f:'x*x*exp(-x)',r:[-1,7],pts:[[0,0],[2,4/Math.E**2]],t:'Minimum w 0, maksimum w 2'}],
+['4.2a','II warunek: f(x) = x³ − 3x + 5',['II warunek: jeśli f′(x₀)=0 i f″(x₀)≠0, to f″&gt;0 daje minimum, f″&lt;0 maksimum.','f′ = 3x² − 3 = 0 ⇒ x = ±1. f″ = 6x.','f″(−1) = −6 &lt; 0 ⇒ maksimum, f(−1) = 7.','f″(1) = 6 &gt; 0 ⇒ minimum, f(1) = 3.'],'Max f(−1)=7, min f(1)=3'],
+['4.3b','f(x) = x³ − 3x² − 9x + 9, punkty przegięcia',['Wypukłość bada druga pochodna. f′ = 3x²−6x−9, f″ = 6x − 6.','f″ = 0 ⇒ x = 1. f″ &lt; 0 dla x&lt;1 (wklęsła), f″ &gt; 0 dla x&gt;1 (wypukła).','Znak się zmienia, więc x=1 to punkt przegięcia: f(1) = 1−3−9+9 = −2.'],'Punkt przegięcia (1,−2); wklęsła (−∞,1), wypukła (1,∞)',{f:'x**3-3*x*x-9*x+9',r:[-4,5],pts:[[1,-2]],t:'Krzywa zmienia krzywiznę w (1; −2)'}]
+]},
+{n:'Lista V',t:'Całki nieoznaczone',d:'Wzory, przez części, podstawienia. Pamiętaj o + C.',k:[
+['5.1a','∫ (x²−1)³ / x dx',['Rozwijamy: (x²−1)³ = x⁶ − 3x⁴ + 3x² − 1 (wzór na sześcian różnicy).','Dzielimy przez x: x⁵ − 3x³ + 3x − 1/x.','Całkujemy wyraz po wyrazie; ∫ 1/x dx = ln|x|.'],'x⁶/6 − 3x⁴/4 + 3x²/2 − ln|x| + C'],
+['5.1h','∫ tg²x dx',['Trik: tg²x = sin²x/cos²x = (1 − cos²x)/cos²x = 1/cos²x − 1.','∫ 1/cos²x dx = tg x, ∫ 1 dx = x.'],'tg x − x + C'],
+['5.2a','∫ x³eˣ dx (przez części)',['Wzór: ∫u v′ = uv − ∫u′ v. Wybieramy u = wielomian (po pochodnej się upraszcza), v′ = eˣ.','Krok 1: x³eˣ − 3∫x²eˣ. Krok 2: ∫x²eˣ = x²eˣ − 2∫xeˣ. Krok 3: ∫xeˣ = xeˣ − eˣ.','Składamy od końca: x³eˣ − 3x²eˣ + 6xeˣ − 6eˣ.'],'eˣ (x³ − 3x² + 6x − 6) + C'],
+['5.2f','∫ x ln x dx (przez części)',['Tu odwrotnie: u = ln x (bo jego pochodna jest prosta), v′ = x, więc v = x²/2.','∫ = (x²/2) ln x − ∫ (1/x)(x²/2) dx = (x²/2) ln x − ∫ x/2 dx.'],'(x²/2) ln x − x²/4 + C'],
+['5.2h','∫ arccos x dx',['Sztuczka: traktujemy jako 1 · arccos x. u = arccos x, v′ = 1, v = x. u′ = −1/√(1−x²).','∫ = x arccos x + ∫ x/√(1−x²) dx.','Ostatnią całkę robimy podstawieniem t = 1−x²: daje −√(1−x²).'],'x arccos x − √(1−x²) + C'],
+['5.3a','∫ (5−3x)¹⁰ dx',['Podstawienie t = 5−3x, dt = −3 dx, czyli dx = −dt/3.','∫ t¹⁰ · (−1/3) dt = −t¹¹/33.'],'−(5−3x)¹¹/33 + C'],
+['5.3e','∫ ln x / x dx',['Podstawienie t = ln x, dt = dx/x. Całka robi się ∫ t dt.'],'ln²x / 2 + C'],
+['5.3i','∫ sin³x dx',['Rozbijamy: sin³x = sin²x · sin x = (1 − cos²x) sin x.','Podstawienie t = cos x, dt = −sin x dx: ∫ (1 − t²)(−dt) = −t + t³/3.'],'−cos x + cos³x/3 + C']
+]},
+{n:'Lista VI',t:'Całki oznaczone',d:'Newton-Leibniz, pola, objętości.',k:[
+['6.1d','∫₁⁴ (x²−2x+2) dx',['Wzór Newtona-Leibniza: ∫ₐᵇ f = F(b) − F(a), gdzie F to funkcja pierwotna.','F(x) = x³/3 − x² + 2x.','F(4) = 64/3 − 16 + 8 = 64/3 − 8. F(1) = 1/3 − 1 + 2 = 4/3.','64/3 − 8 − 4/3 = 20 − 8 = 12.'],'12'],
+['6.1e','∫₋₁³ (x+1)(x+2) dx',['Rozwijamy: x² + 3x + 2. F(x) = x³/3 + 3x²/2 + 2x.','F(3) = 9 + 13,5 + 6 = 28,5. F(−1) = −1/3 + 3/2 − 2 = −5/6.','28,5 + 5/6 = 171/6 + 5/6 = 176/6.'],'88/3'],
+['6.2b','∫₁² x ln x dx',['Przez części (jak w 5.2f): F(x) = (x²/2) ln x − x²/4.','F(2) = 2 ln 2 − 1. F(1) = 0 − 1/4.','Różnica: 2 ln 2 − 1 + 1/4.'],'2 ln 2 − 3/4'],
+['6.3a','∫₀⁵ 2x(x²+3) dx',['Podstawienie t = x²+3, dt = 2x dx. <b>Zmieniamy też granice</b>: x=0 → t=3, x=5 → t=28.','∫₃²⁸ t dt = (28² − 3²)/2 = (784 − 9)/2.'],'775/2'],
+['6.3c','∫₀¹ x·e^(x²) dx',['t = x², dt = 2x dx, czyli x dx = dt/2. Granice: 0 → 0, 1 → 1.','½ ∫₀¹ eᵗ dt = ½ (e − 1).'],'(e − 1)/2'],
+['6.4b','Pole między y = 2x−x² a prostą x+y=0',['Prosta to y = −x. Punkty przecięcia: 2x − x² = −x ⇒ 3x − x² = 0 ⇒ x = 0 lub x = 3.','Na (0,3) parabola leży nad prostą, więc pole = ∫₀³ (2x − x² − (−x)) dx = ∫₀³ (3x − x²) dx.','= [3x²/2 − x³/3]₀³ = 27/2 − 9 = 9/2.'],'9/2',{f:'2*x-x*x',r:[-1,4],t:'Parabola y = 2x − x² (prosta y = −x ucina pole od x=0 do x=3)'}],
+['6.6a','Objętość bryły z obrotu y = cos x, −π/2 ≤ x ≤ π/2, wokół Ox',['Wzór: V = π ∫ f(x)² dx.','V = π ∫ cos²x dx = π ∫ (1 + cos 2x)/2 dx = π [x/2 + sin2x/4] od −π/2 do π/2.','Część z sin 2x daje 0 na obu końcach, zostaje π · (π/4 + π/4) = π · π/2.'],'V = π²/2',{f:'cos(x)',r:[-1.8,1.8],t:'Ten łuk obracamy wokół osi Ox'}]
+]},
+{n:'Lista VII',t:'Szeregi liczbowe',d:'Kryteria porównawcze, d’Alemberta, ilorazowe.',k:[
+['7.1a','Σ 1/(n²+1)',['Porównujemy z szeregiem, który znamy: Σ 1/n² zbieżny (szereg Dirichleta, p=2 &gt; 1).','1/(n²+1) &lt; 1/n², więc nasz szereg jest mniejszy od zbieżnego.'],'Zbieżny'],
+['7.2','Kryterium d’Alemberta: sprawdzamy granicę aₙ₊₁/aₙ',['Reguła: granica &lt; 1 → zbieżny, &gt; 1 → rozbieżny, = 1 → kryterium nic nie mówi.','a) 2ⁿ/n²: iloraz = 2n²/(n+1)² → 2 &gt; 1. Rozbieżny.','b) (n!)²/(2n)!: iloraz = (n+1)²/((2n+1)(2n+2)) → 1/4 &lt; 1. Zbieżny.','c) nⁿ/n!: iloraz = (1+1/n)ⁿ → e &gt; 1. Rozbieżny.'],'a) rozbieżny, b) zbieżny, c) rozbieżny'],
+['7.4d','Σ (1 − cos(1/n)) (kryterium ilorazowe)',['Dla małego t: 1 − cos t ≈ t²/2. Czyli wyraz zachowuje się jak 1/(2n²).','Granica ilorazu z 1/n²: (1−cos(1/n))/(1/n²) → 1/2, skończona dodatnia.','Σ 1/n² zbieżny, więc nasz też.'],'Zbieżny'],
+['7.4f','Σ ln((n+1)/n)',['ln((n+1)/n) = ln(1 + 1/n) ≈ 1/n dla dużych n.','Granica ilorazu z 1/n wynosi 1. Σ 1/n to szereg harmoniczny, rozbieżny.'],'Rozbieżny']
+]},
+{n:'Lista VIII',t:'Szeregi Fouriera',d:'Współczynniki a₀, aₙ, bₙ. Z suwakiem do podglądu sum.',k:[
+['8.3','Rozwiń f(x) = x w szereg Fouriera na (−π, π)',['Funkcja x jest <b>nieparzysta</b>, więc wszystkie aₙ = 0 (zostają same sinusy).','bₙ = (2/π) ∫₀^π x sin(nx) dx. Przez części: ∫ x sin nx = −x cos nx / n + sin nx / n².','Na [0,π]: −π cos(nπ)/n = −π(−1)ⁿ/n. Po pomnożeniu przez 2/π: bₙ = 2(−1)ⁿ⁺¹/n.','Przesuń suwak poniżej: im więcej wyrazów, tym lepiej suma dopasowuje się do prostej (poza skokami w ±π).'],'x = Σ 2(−1)ⁿ⁺¹ sin(nx)/n',{four:'x'}],
+['8.1','Rozwiń f(x) = x² w szereg Fouriera na (−π, π)',['Funkcja jest <b>parzysta</b>, więc bₙ = 0 (zostają cosinusy).','a₀ = (2/π) ∫₀^π x² dx = 2π²/3, w szeregu występuje a₀/2 = π²/3.','aₙ = (2/π) ∫₀^π x² cos nx dx. Dwa razy przez części daje aₙ = 4(−1)ⁿ/n².','Bonus: wstaw x = π, cos nπ = (−1)ⁿ, dostajesz π² = π²/3 + 4Σ1/n², czyli Σ 1/n² = π²/6.'],'x² = π²/3 + Σ 4(−1)ⁿ cos(nx)/n²',{four:'x2'}]
+]}
+];
+var done={},cur=0;
+var nav=document.getElementById('nav'),main=document.getElementById('main');
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function setup(cv){var r=window.devicePixelRatio||1;cv.width=640*r;cv.height=300*r;cv.getContext('2d').setTransform(r,0,0,r,0,0);return cv.getContext('2d')}
+function frame(c,xa,xb,ya,yb){var W=640,H=300,X=function(x){return (x-xa)/(xb-xa)*W},Y=function(y){return H-(y-ya)/(yb-ya)*H};
+c.clearRect(0,0,W,H);c.strokeStyle=css('--line');c.lineWidth=1;c.beginPath();
+if(xa<0&&xb>0){c.moveTo(X(0),0);c.lineTo(X(0),H)}if(ya<0&&yb>0){c.moveTo(0,Y(0));c.lineTo(W,Y(0))}c.stroke();return{X:X,Y:Y}}
+function curve(c,fn,xa,xb,fx,col,w){c.strokeStyle=col;c.lineWidth=w||2.5;c.beginPath();var pen=false;for(var i=0;i<=500;i++){var x=xa+(xb-xa)*i/500,y=fn(x);if(!isFinite(y)||Math.abs(y)>1e4){pen=false;continue}var px=fx.X(x),py=fx.Y(y);if(pen)c.lineTo(px,py);else c.moveTo(px,py);pen=true}c.stroke()}
+function mk(f){try{return new Function('x','with(Math){return '+f.replace(/\^/g,'**')+'}')}catch(e){return function(){return NaN}}}
+function plot(cv,sp){var c=setup(cv),f=mk(sp.f),a=sp.r[0],b=sp.r[1],lo=1e9,hi=-1e9;
+for(var i=0;i<=300;i++){var y=f(a+(b-a)*i/300);if(isFinite(y)&&Math.abs(y)<1e3){lo=Math.min(lo,y);hi=Math.max(hi,y)}}
+var p=(hi-lo)*0.12||1;lo-=p;hi+=p;var fx=frame(c,a,b,lo,hi);curve(c,f,a,b,fx,css('--ac'));
+(sp.pts||[]).forEach(function(q){c.fillStyle=css('--ok');c.beginPath();c.arc(fx.X(q[0]),fx.Y(q[1]),6,0,7);c.fill()})}
+function fsum(kind,N,x){x=((x+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;var s=kind=='x'?0:Math.PI*Math.PI/3;
+for(var n=1;n<=N;n++)s+=kind=='x'?2*(n%2?1:-1)*Math.sin(n*x)/n:4*(n%2?-1:1)*Math.cos(n*x)/(n*n);return s}
+function fourier(box,kind){var cv=document.createElement('canvas'),sl=document.createElement('input'),lb=document.createElement('div');
+sl.type='range';sl.min=1;sl.max=40;sl.value=3;sl.setAttribute('aria-label','Liczba wyrazów szeregu');lb.className='tip';
+box.appendChild(lb);box.appendChild(sl);box.appendChild(cv);
+function d(){var N=+sl.value,c=setup(cv),T=2*Math.PI,hi=kind=='x'?4:11,lo=kind=='x'?-4:-1,fx=frame(c,-T,T,lo,hi);
+var tg=function(x){x=((x+Math.PI)%T+T)%T-Math.PI;return kind=='x'?x:x*x};
+curve(c,tg,-T,T,fx,css('--mut'),1.5);curve(c,function(x){return fsum(kind,N,x)},-T,T,fx,css('--ac'),2.5);
+lb.textContent='Suma pierwszych '+N+' wyrazów (niebieska) i funkcja (szara)'}
+sl.oninput=d;d()}
+function card(t,i){var s=t[4],h=document.createElement('div');h.className='card';
+h.innerHTML='<button class="hd" aria-expanded="false"><span class="id">'+t[0]+'</span><span class="q">'+t[1]+'</span></button><div class="body" hidden></div>';
+var b=h.lastChild,btn=h.firstChild,key=cur+'-'+i,init=false;
+btn.onclick=function(){var o=b.hidden;b.hidden=!o;btn.setAttribute('aria-expanded',o);if(o&&!init){init=true;
+b.innerHTML='<ol>'+t[2].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ol><div class="ans">Wynik: '+t[3]+'</div>';
+if(s){var w=document.createElement('div');b.appendChild(w);if(s.four)fourier(w,s.four);else{var cv=document.createElement('canvas');w.appendChild(cv);plot(cv,s);if(s.t){var p=document.createElement('div');p.className='tip';p.textContent=s.t;w.appendChild(p)}}}
+var k=document.createElement('button');k.className='tick';k.textContent=done[key]?'Zrobione':'Oznacz jako zrobione';
+k.onclick=function(){done[key]=!done[key];k.textContent=done[key]?'Zrobione':'Oznacz jako zrobione';h.classList.toggle('done',!!done[key]);prog()};b.appendChild(k)}};
+if(done[key])h.classList.add('done');return h}
+function prog(){var n=L[cur].k.length,c=0;for(var i=0;i<n;i++)if(done[cur+'-'+i])c++;var bar=document.querySelector('.bar i');if(bar)bar.style.width=(c/n*100)+'%'}
+function show(i){cur=i;[].forEach.call(nav.children,function(b,j){b.setAttribute('aria-pressed',j==i)});
+if(i==L.length){main.innerHTML='<h2>Kreślarka</h2><p class="sub">Wpisz dowolną funkcję i zobacz jej wykres. Przykłady: x^3-3*x+5, sin(x)/x, exp(-x*x). Używaj * do mnożenia.</p><input type="text" id="fi" value="x^3-3*x+5" aria-label="Wzór funkcji"><canvas id="cv"></canvas><div class="tip">Zakres x: od −6 do 6</div>';
+var cv=document.getElementById('cv'),fi=document.getElementById('fi');fi.oninput=function(){plot(cv,{f:fi.value||'0',r:[-6,6]})};fi.oninput();return}
+var l=L[i];main.innerHTML='<h2>'+l.n+': '+l.t+'</h2><p class="sub">'+l.d+'</p><div class="bar"><i></i></div>';
+l.k.forEach(function(t,j){main.appendChild(card(t,j))});
+var w=document.createElement('p');w.className='warn';w.textContent='To pierwsza, odchudzona wersja: tu jest wybór zadań z tej listy, reszta dochodzi w kolejnych rozszerzeniach.';main.appendChild(w);prog()}
+L.concat([{n:'Kreślarka'}]).forEach(function(l,i){var b=document.createElement('button');b.textContent=l.n;b.onclick=function(){show(i)};nav.appendChild(b)});
+show(0);
+</script></body></html>
